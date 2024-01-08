@@ -5,6 +5,9 @@ Azure DevOps Manager.
 
 - [x] Folder structure 
 - [ ] Supported settings list
+    - [x] Static values - Values needed for runtime
+        - Project
+        - Organization
     - [x] repos
         - Name
         - DefaultBranch
