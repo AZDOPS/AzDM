@@ -8,6 +8,12 @@ Azure DevOps Manager.
     - [x] Static values - Values needed for runtime
         - Project
         - Organization
+    - [x] Project
+        - Name
+        - Description
+        - Visibility
+        - ProcessTypeName
+        - SourceControlType
     - [x] repos
         - Name
         - DefaultBranch
@@ -26,7 +32,7 @@ Azure DevOps Manager.
 - [ ] Automated verify / WhatIf pipeline
 - [ ] Deploying projects
 - [ ] Deploying pipelines
-- [ ] Deploying repos
+- [x] Deploying repos
 - [ ] Deploying artifact feeds
 - [ ] Updating projects
 - [ ] Updating pipelines
