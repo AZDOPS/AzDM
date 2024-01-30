@@ -30,8 +30,9 @@ Azure DevOps Manager.
     - [ ] Basic data content?
 - [ ] Automated deploy pipeline
 - [ ] Automated verify / WhatIf pipeline
-- [ ] Deploying projects
-- [ ] Deploying pipelines
+- [x] Deploying projects
+- [x] Deploying pipelines
+    - [ ] Improve yaml template management in pipelines functions 
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
 - [ ] Updating projects
@@ -43,7 +44,6 @@ Azure DevOps Manager.
     - [ ] VMSS Bicep setup w. managed identity
     - [ ] Service connection
 - [ ] QuickStart templates (import all required setup)
-
 ## Stage 2 requirements
 
 - [ ] Pull existing data
