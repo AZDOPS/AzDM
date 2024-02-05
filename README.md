@@ -28,11 +28,11 @@ Azure DevOps Manager.
     - [ ] format of data?
         - [ ] casing of properties in config files?
     - [ ] Basic data content?
-- [ ] Automated deploy pipeline
+- [x] Automated deploy pipeline
 - [ ] Automated verify / WhatIf pipeline
 - [x] Deploying projects
 - [x] Deploying pipelines
-    - [ ] Improve yaml template management in pipelines functions 
+    - [ ] Improve yaml template management in pipelines functions - Allow for different yaml templates?
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
 - [ ] Updating projects
@@ -43,7 +43,12 @@ Azure DevOps Manager.
 - [ ] Dependencies
     - [ ] VMSS Bicep setup w. managed identity
     - [ ] Service connection
+    - [ ] Library - task settings for pipeline
+        - [ ] 'AzDM' - 'AzDMOrganizationName'
+        - [ ] 'AzDM' - 'AzDMTenantId'
+    - [ ] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
 - [ ] QuickStart templates (import all required setup)
+
 ## Stage 2 requirements
 
 - [ ] Pull existing data
