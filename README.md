@@ -36,7 +36,9 @@ Azure DevOps Manager.
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
 - [ ] Updating projects
+    - [ ] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
 - [ ] Updating pipelines
+    - [ ] Requirement: git diff in pipeline to verify what is changed TODO:
 - [ ] Updating repos
 - [ ] Adding members (AD Accounts) to built in project groups
     - [ ] Merge access with existing (add only)
