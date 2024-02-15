@@ -29,17 +29,20 @@ Azure DevOps Manager.
         - [ ] casing of properties in config files?
     - [ ] Basic data content?
 - [x] Automated deploy pipeline
+    - [ ] TODO: Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
 - [ ] Automated verify / WhatIf pipeline
 - [x] Deploying projects
 - [x] Deploying pipelines
     - [ ] Improve yaml template management in pipelines functions - Allow for different yaml templates?
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
-- [ ] Updating projects
+- [ ] TODO: Updating projects
+    - [x] Requirement: git diff in pipeline to verify what is changed
     - [ ] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
-- [ ] Updating pipelines
-    - [ ] Requirement: git diff in pipeline to verify what is changed TODO:
-- [ ] Updating repos
+- [x] Updating pipelines
+    - [x] Requirement: git diff in pipeline to verify what is changed
+- [ ] TODO: Updating repos
+    - [x] Requirement: git diff in pipeline to verify what is changed
 - [ ] Adding members (AD Accounts) to built in project groups
     - [ ] Merge access with existing (add only)
 - [ ] Dependencies
