@@ -40,8 +40,9 @@ Azure DevOps Manager.
     - [x] Requirement: git diff in pipeline to verify what is changed
     - [ ] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
 - [x] Updating pipelines
+    - [ ] Convert some code to ADOPS functions - Get-ADOPSBuildDefinition, Set-ADOPSBuildDefinition
     - [x] Requirement: git diff in pipeline to verify what is changed
-- [ ] TODO: Updating repos
+- [x] Updating repos
     - [x] Requirement: git diff in pipeline to verify what is changed
 - [ ] Adding members (AD Accounts) to built in project groups
     - [ ] Merge access with existing (add only)
