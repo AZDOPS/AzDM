@@ -4,7 +4,7 @@ Azure DevOps Manager.
 ## Stage 1 requirements
 
 - [x] Folder structure 
-- [ ] Supported settings list
+- [x] Supported settings list
     - [x] Static values - Values needed for runtime
         - Project
         - Organization
@@ -36,11 +36,11 @@ Azure DevOps Manager.
     - [ ] Improve yaml template management in pipelines functions - Allow for different yaml templates?
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
-- [ ] TODO: Updating projects
+- [x] Updating projects
     - [x] Requirement: git diff in pipeline to verify what is changed
-    - [ ] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
+    - [x] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
 - [x] Updating pipelines
-    - [ ] Convert some code to ADOPS functions - Get-ADOPSBuildDefinition, Set-ADOPSBuildDefinition
+    - [x] Convert some code to ADOPS functions - Get-ADOPSBuildDefinition, Set-ADOPSBuildDefinition
     - [x] Requirement: git diff in pipeline to verify what is changed
 - [x] Updating repos
     - [x] Requirement: git diff in pipeline to verify what is changed
