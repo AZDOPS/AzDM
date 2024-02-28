@@ -52,6 +52,7 @@ Azure DevOps Manager.
     - [ ] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
 - [ ] QuickStart templates (import all required setup)
 - [ ] Documentation!!
+    - [ ] a _real_ readme.md...
     - [ ] casing of properties in config files?
     - [ ] All levels JSON layout and valid keys
         - [ ] Security needs principalName - usually email for Entra ID users.
