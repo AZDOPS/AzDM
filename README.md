@@ -23,17 +23,13 @@ Azure DevOps Manager.
         - Name
         - Repository
         - YamlPath
-- [ ] Data/Settings merging
-    - [ ] Bind to root folder - Something better than $PSScriptRoot to know where the root structure is.
-    - [ ] format of data?
-        - [ ] casing of properties in config files?
-    - [ ] Basic data content?
+- [x] Data/Settings merging
+    - [x] Bind to root folder - Something better than $PSScriptRoot to know where the root structure is.
+    - [x] format of data?
 - [x] Automated deploy pipeline
-    - [ ] TODO: Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
-- [ ] Automated verify / WhatIf pipeline
+    - [ ] Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
 - [x] Deploying projects
 - [x] Deploying pipelines
-    - [ ] Improve yaml template management in pipelines functions - Allow for different yaml templates?
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
 - [x] Updating projects
@@ -44,8 +40,9 @@ Azure DevOps Manager.
     - [x] Requirement: git diff in pipeline to verify what is changed
 - [x] Updating repos
     - [x] Requirement: git diff in pipeline to verify what is changed
-- [ ] Adding members (AD Accounts) to built in project groups
-    - [ ] Merge access with existing (add only)
+- [x] Adding members (AD Accounts) to built in project groups
+    - [x] Merge access with existing (add only)
+- [ ] Automated verify / WhatIf pipeline
 - [ ] Dependencies
     - [ ] VMSS Bicep setup w. managed identity
     - [ ] Service connection
@@ -54,6 +51,12 @@ Azure DevOps Manager.
         - [ ] 'AzDM' - 'AzDMTenantId'
     - [ ] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
 - [ ] QuickStart templates (import all required setup)
+- [ ] Documentation!!
+    - [ ] casing of properties in config files?
+    - [ ] All levels JSON layout and valid keys
+        - [ ] Security needs principalName - usually email for Entra ID users.
+    - [ ] Module concept - Global settings and how functions use them
+
 
 ## Stage 2 requirements
 
@@ -61,3 +64,4 @@ Azure DevOps Manager.
 - [ ] policy mismatch report
 - [ ] Extended security and access
     - [ ] Merge false - Overwrite default access
+- [ ] Improve yaml template management in pipelines functions - Allow for different yaml templates?
