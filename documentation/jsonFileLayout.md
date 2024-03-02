@@ -13,7 +13,7 @@
 
 Because there are _a lot_ of json files involved in this project I decided to document them here. If a json file is missing, please open an issue, or create a pull request to improve documentation.
 
-> **Important:** In many cases the usage of these files are case sensitive and _will not work_ if capitalization is not as documented. For example `"Repos": {}` and `"repos": {}` are different. The sama is also valid for file and folder names. Capitalization of the filename and the folder name _must always_ be the same. Non consistent capitalization may lead to failures. **If you have issues, please verify the capitalization before opening an issue!**
+> **Important:** In many cases the usage of these files are case sensitive and _will not work_ if capitalization is not as documented. For example `"Repos": {}` and `"repos": {}` are different. The same is also valid for file and folder names. Capitalization of the filename and the folder name _must always_ be the same. Non consistent capitalization may lead to failures. **If you have issues, please verify the capitalization before opening an issue!**
 
 Every property covered in any json config _should_ be in camelCase!
 
