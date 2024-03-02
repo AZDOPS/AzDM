@@ -56,7 +56,7 @@ Azure DevOps Manager.
     - [x] casing of properties in config files
     - [x] All levels JSON layout and valid keys
         - [x] Security needs principalName - usually email for Entra ID users.
-    - [ ] Module concept - Global settings and how functions use them
+    - [x] Module concept - Global settings and how functions use them
 
 
 ## Stage 2 requirements
