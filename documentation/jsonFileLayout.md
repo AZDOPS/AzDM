@@ -19,9 +19,9 @@ Every property covered in any json config _should_ be in camelCase!
 
 ## settings.json
 
-Structure location: Root of your repo.
-Name: settings.json
-Note: This file should only contain AzDM configurations.
+- Structure location: Root of your repo.
+- Name: settings.json
+- Note: This file should only contain AzDM configurations.
 
 ```json
 {
@@ -33,9 +33,9 @@ Note: This file should only contain AzDM configurations.
 
 ## config.json
 
-Structure location: Root folder set in settings.json.
-Name: config.json
-Note: This file contains _global_ organization wide settings, as well as configuration settings applied for all projects.
+- Structure location: Root folder set in settings.json.
+- Name: config.json
+- Note: This file contains _global_ organization wide settings, as well as configuration settings applied for all projects.
 
 ```json
 {
@@ -54,9 +54,9 @@ Note: This file contains _global_ organization wide settings, as well as configu
 
 ## projectName.json
 
-Structure location: Root of a project.
-Name: Same as project. 
-Note: Capitalization of the file name and the folder name _must_ be the same.
+- Structure location: Root of a project.
+- Name: Same as project. 
+- Note: Capitalization of the file name and the folder name _must_ be the same.
 
 ```json
 {
@@ -79,9 +79,9 @@ Note: Capitalization of the file name and the folder name _must_ be the same.
 
 ## projectName.repos.json
 
-Structure location: root/projectName/repos/
-Name: projectName.repos.json
-Note: Capitalization of the file name and the path _must_ be the same.
+- Structure location: root/projectName/repos/
+- Name: projectName.repos.json
+- Note: Capitalization of the file name and the path _must_ be the same.
 
 ```json
 {
@@ -93,10 +93,9 @@ Note: Capitalization of the file name and the path _must_ be the same.
 
 ## projectName.pipelines.json
 
-Structure location: root/projectName/pipelines/
-Name: projectName.pipelines.json
-Note: Capitalization of the file name and the path _must_ be the same.
-Note: I have implemented some place holder functionality in order to set defaults easier. Please see [pipelines](pipelines.md) for details
+- Structure location: root/projectName/pipelines/
+- Name: projectName.pipelines.json
+- Note: Capitalization of the file name and the path _must_ be the same.
 
 ```json
 {
@@ -108,9 +107,9 @@ Note: I have implemented some place holder functionality in order to set default
 
 ## repoName.json
 
-Structure location: root/projectName/pipelines/repoName/
-Name: repoName.json
-Note: Capitalization of the file name and the path _must_ be the same.
+- Structure location: root/projectName/pipelines/repoName/
+- Name: repoName.json
+- Note: Capitalization of the file name and the path _must_ be the same.
 
 ```json
 { } // This list may contain all settings supported by repos
@@ -118,9 +117,9 @@ Note: Capitalization of the file name and the path _must_ be the same.
 
 ## pipelineName.json
 
-Structure location: root/projectName/pipelines/pipelineName/
-Name: pipelineName.json
-Note: Capitalization of the file name and the path _must_ be the same.
+- Structure location: root/projectName/pipelines/pipelineName/
+- Name: pipelineName.json
+- Note: Capitalization of the file name and the path _must_ be the same.
 
 ```json
 { } // This list may contain all settings supported by pipelines
