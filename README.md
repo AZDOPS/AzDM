@@ -53,9 +53,9 @@ Azure DevOps Manager.
 - [ ] QuickStart templates (import all required setup)
 - [ ] Documentation!!
     - [ ] a _real_ readme.md...
-    - [ ] casing of properties in config files?
+    - [x] casing of properties in config files
     - [x] All levels JSON layout and valid keys
-        - [ ] Security needs principalName - usually email for Entra ID users.
+        - [x] Security needs principalName - usually email for Entra ID users.
     - [ ] Module concept - Global settings and how functions use them
 
 
