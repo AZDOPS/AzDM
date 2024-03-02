@@ -13,7 +13,9 @@
 
 Because there are _a lot_ of json files involved in this project I decided to document them here. If a json file is missing, please open an issue, or create a pull request to improve documentation.
 
-> **Important:** In many cases the usage of these files are case sensitive and _will not work_ if capitalization is not as documented. Fore example `"Repos": {}` and `"repos": {}` are different. If you have issues, please verify the capitalization before opening an issue!
+> **Important:** In many cases the usage of these files are case sensitive and _will not work_ if capitalization is not as documented. For example `"Repos": {}` and `"repos": {}` are different. If you have issues, please verify the capitalization before opening an issue!
+
+Every property covered in any json config _should_ be in camelCase!
 
 ## settings.json
 
@@ -63,8 +65,8 @@ Note: Capitalization of the file name and the folder name _must_ be the same.
       "pipelinesFolder": "<subfolder where repos are located>" // Required!! For pipelines functionality
     },
     "defaults": {
-        "Description": "<Project description>", // not required 
-        "ProcessTypeName": "<Project process, f.eg Scrum or Basic>" // required if not set as default setting
+        "description": "<Project description>", // not required 
+        "processTypeName": "<Project process, f.eg Scrum or Basic>" // required if not set as default setting
     },
     "project": { // the project key _needs_ to exist in order for any repos, pipelines, or security to be applied. 
         // Any settings here will be applied to this project unless overwritten in configurations further down in the hierarchy. Supported settings are documented in each separate chapter.
