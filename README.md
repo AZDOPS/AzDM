@@ -41,7 +41,7 @@ Azure DevOps Manager.
 - [x] Updating repos
     - [x] Requirement: git diff in pipeline to verify what is changed
 - [x] Adding members (AD Accounts) to built in project groups
-    - [x] Merge access with existing (add only)
+    - [x] Merge access with existing (add only) 
 - [ ] Automated verify / WhatIf pipeline
 - [ ] Dependencies
     - [ ] VMSS Bicep setup w. managed identity
@@ -54,7 +54,7 @@ Azure DevOps Manager.
 - [ ] Documentation!!
     - [ ] a _real_ readme.md...
     - [ ] casing of properties in config files?
-    - [ ] All levels JSON layout and valid keys
+    - [x] All levels JSON layout and valid keys
         - [ ] Security needs principalName - usually email for Entra ID users.
     - [ ] Module concept - Global settings and how functions use them
 
