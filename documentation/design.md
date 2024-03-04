@@ -11,4 +11,5 @@ In no particular order:
     - Invoke-AzDM - Called from the pipeline yaml.
 - Internal variables use camelCase
 - Parameter variables use PascalCase
+- All functions, internal and external, shall have the CmdLetBinding attribute in order to properly support -Verbose, -Debug and other streams.
 - All PowerShell module functions exist inside a file with a name matching the functionality
