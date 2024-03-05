@@ -1,5 +1,10 @@
 # Documentation
 
+## Installation
+
+- [Requirements and short docs](./Setup/requirements.md)
+- [AzDM Accelerator script](../setupAccelerator/readme.md)
+
 ## Usage
 
 - [Creating a new project](newProject.md)

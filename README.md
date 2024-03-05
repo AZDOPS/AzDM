@@ -42,7 +42,7 @@ Azure DevOps Manager.
     - [x] Requirement: git diff in pipeline to verify what is changed
 - [x] Adding members (AD Accounts) to built in project groups
     - [x] Merge access with existing (add only) 
-- [ ] Automated verify / WhatIf pipeline
+- [x] Automated verify / WhatIf pipeline
 - [ ] Dependencies
     - [ ] VMSS Bicep setup w. managed identity
     - [ ] Service connection
