@@ -44,13 +44,13 @@ Azure DevOps Manager.
     - [x] Merge access with existing (add only) 
 - [x] Automated verify / WhatIf pipeline
 - [ ] Dependencies
-    - [ ] VMSS Bicep setup w. managed identity
-    - [ ] Service connection
-    - [ ] Library - task settings for pipeline
-        - [ ] 'AzDM' - 'AzDMOrganizationName'
-        - [ ] 'AzDM' - 'AzDMTenantId'
+    - [x] VMSS Bicep setup w. managed identity
+    - [x] Service connection
+    - [x] Library - task settings for pipeline
+        - [x] 'AzDM' - 'AzDMOrganizationName'
+        - [x] 'AzDM' - 'AzDMTenantId'
     - [ ] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
-- [ ] QuickStart templates (import all required setup)
+- [x] QuickStart templates (import all required setup)
 - [ ] Documentation!!
     - [ ] a _real_ readme.md...
     - [x] casing of properties in config files

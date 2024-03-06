@@ -142,7 +142,7 @@ if ($null -eq $Repo) {
 }
 
 # Import the AzDM repo
-$null = Import-ADOPSRepository -Project $AzDMProject.Name -RepositoryName $Repo.name -GitSource 'TODO:Insert correct link' -Wait
+$null = Import-ADOPSRepository -Project $AzDMProject.Name -RepositoryName $Repo.name -GitSource 'https://github.com/AZDOPS/AzDM.git' -Wait
 $null = Set-ADOPSRepository -Project $AzDMProject.Name -RepositoryId $Repo.id -DefaultBranch 'main' 
 
 #endregion
@@ -155,8 +155,6 @@ $AzDMVariableGroup = @(
 )
 $null = New-ADOPSVariableGroup -Project $AzDMProject.Name -VariableGroupName 'AzDM' -VariableHashtable $AzDMVariableGroup 
 #endregion
-
-
 
 #region create new pipelines from existing YAML manifests.
 $PushPipeline = New-ADOPSPipeline -Name 'AzDM - Push' -YamlPath '.pipelines/Push.yaml' -Repository $Repo.name -Project $AzDMProject.Name
