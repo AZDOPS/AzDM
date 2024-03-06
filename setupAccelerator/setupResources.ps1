@@ -20,6 +20,7 @@ $AzureDevOpsAzDMProject = @{
     Visibility = 'Private'
 }
 $AzureDevOpsAzDMRepo = 'AzDM'
+$AzDMRootFolder = 'Root' # This folder _must_ also be set in settings.json!
 
 # Connect to your Azure DevOps and Azure resources
 Connect-AzAccount -Subscription $AzureSubsciptionId -Tenant $EntraTenantID
@@ -27,7 +28,12 @@ Connect-ADOPS -Organization $AzureDevOpsOrganizationName -TenantId $EntraTenantI
 
 #region Set up Azure Infrastructure
 # Deploy VMSS and network
-$RG = New-AzResourceGroup -Name $AzureVMSSResourceGroupName -Location $ResourceLocation
+try {
+    $RG = Get-AzResourceGroup -Name $AzureVMSSResourceGroupName
+}
+catch {
+    $RG = New-AzResourceGroup -Name $AzureVMSSResourceGroupName -Location $ResourceLocation
+}
 $Network = New-AzResourceGroupDeployment -Name 'VMSSNetworkDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\network.bicep
 $VMSS = New-AzResourceGroupDeployment -Name 'VMSSDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\VMSS.bicep -TemplateParameterObject @{
     adminUserName = $VMSSAdminUserName
@@ -67,13 +73,67 @@ $GroupMembership = Invoke-ADOPSRestMethod -Uri $Uri -Method Post -Body $Body
 #endregion
 
 #region Create AzDM Project
-$AzDMProject = Get-ADOPSProject -Name $AzureDevOpsAzDMProject
+$AzDMProject = Get-ADOPSProject -Name $AzureDevOpsAzDMProject.Name
 if (-not ($AzDMProject)) {
     $AzDMProject = New-ADOPSProject @AzureDevOpsAzDMProject -Wait
 }
 #endregion
 
-# TODO: Add create pool!
+#region Create Azure DevOps pool
+## Service connection. We dont have support for automatic idenity creation in ADOPS yet.
+$b = @"
+{
+    "data": {
+        "subscriptionId": "$AzureSubsciptionId",
+        "subscriptionName": "$((Get-AzSubscription -SubscriptionId $AzureSubsciptionId).Name)",
+        "environment": "AzureCloud",
+        "scopeLevel": "Subscription",
+        "resourceGroupName": "$AzureVMSSResourceGroupName",
+        "creationMode": "Automatic"
+    },
+    "name": "AzDMVMSSServiceConnection",
+    "type": "azurerm",
+    "url": "https://management.azure.com/",
+    "authorization": {
+        "parameters": {
+            "tenantid": "$EntraTenantID",
+            "scope": "$((Get-AzResourceGroup -Name $AzureVMSSResourceGroupName).ResourceId)"
+        },
+        "scheme": "WorkloadIdentityFederation"
+    },
+    "isShared": false,
+    "isShared": true,
+    "owner": "library",
+    "serviceEndpointProjectReferences": [
+        {
+            "projectReference": {
+                "id": "$($AzDMProject.id)",
+                "name": "$($AzDMProject.name)"
+            },
+            "name": "AzDMVMSSServiceConnection"
+        }
+    ]
+}
+"@
+
+$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/serviceendpoint/endpoints?api-version=7.2-preview.4"
+$serviceConnection = Invoke-ADOPSRestMethod -Method Post -Body $b -Uri $uri
+
+
+$ElasticPoolParams = @{
+    AuthorizeAllPipelines = $true
+    AutoProvisionProjectPools = $true
+    PoolName = 'AzDMPool'
+}
+
+$ElasticPoolObject = New-ADOPSElasticPoolObject -ServiceEndpointId $serviceConnection.id `
+    -ServiceEndpointScope $AzDMProject.id `
+    -AzureId $VMSS.Outputs['vmssResourceId'].Value `
+    -RecycleAfterEachUse $true `
+    -MaxCapacity 5
+
+$ElasticPool = New-ADOPSElasticPool @ElasticPoolParams -ElasticPoolObject $ElasticPoolObject
+#endregion
 
 #region Create and import the AzDM repository
 $Repo = Get-ADOPSRepository -Project $AzDMProject.Name -Repository $AzureDevOpsAzDMRepo
@@ -94,38 +154,34 @@ $AzDMVariableGroup = @(
     @{Name = 'AzDMTenantId'; Value = $EntraTenantID; IsSecret = $false }
 )
 $null = New-ADOPSVariableGroup -Project $AzDMProject.Name -VariableGroupName 'AzDM' -VariableHashtable $AzDMVariableGroup 
-
 #endregion
 
 
 
+#region create new pipelines from existing YAML manifests.
+$PushPipeline = New-ADOPSPipeline -Name 'AzDM - Push' -YamlPath '.pipelines/Push.yaml' -Repository $Repo.name -Project $AzDMProject.Name
+$ValidatePipeline = New-ADOPSPipeline -Name 'AzDms - Validate' -YamlPath '.pipelines/Validate.yaml' -Repository $Repo.name -Project $AzDMProject.Name
+#endregion
 
-# Create three new pipelines from existing YAML manifests.
-$null = New-ADOPSPipeline -Name 'AzOps - Push'     -YamlPath '.pipelines/push.yml'     -Repository $RepoName @OrgParams
-$null = New-ADOPSPipeline -Name 'AzOps - Pull'     -YamlPath '.pipelines/pull.yml'     -Repository $RepoName @OrgParams
-$null = New-ADOPSPipeline -Name 'AzOps - Validate' -YamlPath '.pipelines/validate.yml' -Repository $RepoName @OrgParams
-
-# Add build validation policy to validate pull requests
-$RepoId = Get-ADOPSRepository -Repository $RepoName @OrgParams | Select-Object -ExpandProperty Id
-$PipelineId = Get-ADOPSPipeline -Name 'AzOps - Validate' @OrgParams | Select-Object -ExpandProperty Id
+#region add build validation policy to validate pull requests
 $BuildPolicyParam = @{
-    RepositoryId     = $RepoId
+    RepositoryId     = $Repo.id
     Branch           = 'main'
-    PipelineId       = $PipelineId
+    PipelineId       = $ValidatePipeline.id
     Displayname      = 'Validate'
-    filenamePatterns = '/root/*'
+    filenamePatterns = "/$AzDMRootFolder/*"
 }
-$null = New-ADOPSBuildPolicy @BuildPolicyParam @OrgParams
+$null = New-ADOPSBuildPolicy @BuildPolicyParam -Project $AzDMProject.Name
 
 # Add branch policy to limit merge types to squash only
-$null = New-ADOPSMergePolicy -RepositoryId $RepoId -Branch 'main' -allowSquash @OrgParams
+$null = New-ADOPSMergePolicy -RepositoryId $Repo.id -Branch 'main' -allowSquash -Project $AzDMProject.Name
 
 # Add pipeline permissions for all three pipelines to the credentials Variable Groups
 $Uri = "https://dev.azure.com/$Organization/$ProjectName/_apis/distributedtask/variablegroups?api-version=7.1-preview.2"
-$VariableGroups = (Invoke-ADOPSRestMethod -Uri $Uri -Method 'Get').value | Where-Object name -in 'credentials', 'azops'
-foreach ($pipeline in 'AzOps - Push', 'AzOps - Pull', 'AzOps - Validate') {
-    $PipelineId = Get-ADOPSPipeline -Name $pipeline @OrgParams | Select-Object -ExpandProperty Id
+$VariableGroups = (Invoke-ADOPSRestMethod -Uri $Uri -Method 'Get').value | Where-Object -Property 'name' -eq 'AzDM'
+foreach ($pipeline in 'AzDM - Push', 'AzDM - Validate') {
+    $PipelineId = Get-ADOPSPipeline -Name $pipeline  -Project $AzDMProject.Name | Select-Object -ExpandProperty Id
     foreach ($groupId in $VariableGroups.id) {
-        $null = Grant-ADOPSPipelinePermission -PipelineId $PipelineId -ResourceType 'VariableGroup' -ResourceId $groupId @OrgParams
+        $null = Grant-ADOPSPipelinePermission -PipelineId $PipelineId -ResourceType 'VariableGroup' -ResourceId $groupId  -Project $AzDMProject.Name
     }
 }

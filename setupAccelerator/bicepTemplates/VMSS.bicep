@@ -85,4 +85,5 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2023-09-01' = {
   }
 }
 
-output idetity string = VMSS.identity.principalId
+output identity string = VMSS.identity.principalId
+output VMSSResourceId string = VMSS.id
