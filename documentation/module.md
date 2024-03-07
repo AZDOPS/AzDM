@@ -12,6 +12,14 @@ It does not follow proper Verb-Noun naming standards, it does not separate funct
 
 The main reason for this is that the primary use case for AzDM is not as a locally run module but as a tool in the pipeline.
 
+## Finding and installing the module.
+
+If you do not use the [setup accelerator scripts](../setupAccelerator/readme.md), or if you want to update the module, the best place to go is the [template repo](https://github.com/AZDOPS/AzDMTemplate/)
+
+Updates are made by replacing the `.module` and any other folders except your root folder from the repo.
+
+You may see which version of the module you are running by looking in the `AzDM.psm1` file.
+
 ## Global variables
 
 AzDM sets a number of global variables that it needs to use when creating and / or updating any functionality.

@@ -19,6 +19,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2023-09-01' = {
     capacity: 0
   }
   properties: {
+    singlePlacementGroup: false
     orchestrationMode: 'Uniform'
     upgradePolicy: {
       mode: 'Manual'
@@ -31,6 +32,7 @@ resource VMSS 'Microsoft.Compute/virtualMachineScaleSets@2023-09-01' = {
         linuxConfiguration: {
           disablePasswordAuthentication: false
         }
+        allowExtensionOperations: true
       }
       storageProfile: {
         osDisk: {

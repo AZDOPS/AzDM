@@ -54,7 +54,7 @@ You may also use the [AzDM accelerator scripts](../../setupAccelerator/readme.md
     - After creation, edit the pipeline yaml file to use your VMSS pool: `pool: AzDM-VMSS`
 - One Push pipeline created from the `.pipelines/Validate.yaml` file
     - After creation, edit the pipeline yaml file to use your VMSS pool: `pool: AzDM-VMSS`
-- Grant _both_ pipelines access to the variable group
+- Grant _both_ pipelines access to the variable group, service connection, and agent pool.
 
 ### Build policies
 - Add build validation setting for branch `main` to run the `Validate` pipeline on pull request

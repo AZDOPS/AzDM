@@ -13,3 +13,4 @@ In no particular order:
 - Parameter variables use PascalCase
 - All functions, internal and external, shall have the CmdLetBinding attribute in order to properly support -Verbose, -Debug and other streams.
 - All PowerShell module functions exist inside a file with a name matching the functionality
+- Version of the module _shall_ be tagged in a comment in the psm1 file, in a comment on line 1.
