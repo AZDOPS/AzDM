@@ -29,11 +29,11 @@ Connect-ADOPS -Organization $AzureDevOpsOrganizationName -TenantId $EntraTenantI
 #region Set up Azure Infrastructure
 # Deploy VMSS and network
 try {
-    $RG = Get-AzResourceGroup -Name $AzureVMSSResourceGroupName
-}
-catch {
+    $RG = Get-AzResourceGroup -Name $AzureVMSSResourceGroupName -ErrorAction Stop
+} catch {
     $RG = New-AzResourceGroup -Name $AzureVMSSResourceGroupName -Location $ResourceLocation
 }
+
 $Network = New-AzResourceGroupDeployment -Name 'VMSSNetworkDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\network.bicep
 $VMSS = New-AzResourceGroupDeployment -Name 'VMSSDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\VMSS.bicep -TemplateParameterObject @{
     adminUserName = $VMSSAdminUserName
@@ -44,7 +44,7 @@ $VMSS = New-AzResourceGroupDeployment -Name 'VMSSDeploy' -ResourceGroupName $Azu
 
 #region Add managed identity to Azure DevOps
 # Add the managed identity to your Azure DevOps organization
-$VMSSIdentity = $vmss.Outputs['idetity'].Value
+$VMSSIdentity = $vmss.Outputs['identity'].Value
 $uri = "https://vssps.dev.azure.com/$AzureDevOpsOrganizationName/_apis/graph/serviceprincipals?api-version=7.1-preview.1"
 $body = "{""originId"": ""$($VMSSIdentity)""}"
 $User = Invoke-ADOPSRestMethod -Uri $uri -Method Post -Body $body
@@ -116,23 +116,13 @@ $b = @"
 }
 "@
 
-$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/serviceendpoint/endpoints?api-version=7.2-preview.4"
-$serviceConnection = Invoke-ADOPSRestMethod -Method Post -Body $b -Uri $uri
+$serviceConnectionuri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/serviceendpoint/endpoints?api-version=7.2-preview.4"
+$serviceConnection = Invoke-ADOPSRestMethod -Method Post -Body $b -Uri $serviceConnectionuri
 
+Write-Host "NOTE: Because of stuff and things the creation of a VMSS pool is odd. For now, this step _needs_ to be done manually! Go in to Azure DevOps and set it up by following this guide:"
+Write-Host "https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/scale-set-agents?view=azure-devops#create-the-scale-set-agent-pool"
+$ElasticPoolName = Read-Host "Enter your pool name, or replace the read-host. I put this here so we wont try the next step without an agent pool created..."
 
-$ElasticPoolParams = @{
-    AuthorizeAllPipelines = $true
-    AutoProvisionProjectPools = $true
-    PoolName = 'AzDMPool'
-}
-
-$ElasticPoolObject = New-ADOPSElasticPoolObject -ServiceEndpointId $serviceConnection.id `
-    -ServiceEndpointScope $AzDMProject.id `
-    -AzureId $VMSS.Outputs['vmssResourceId'].Value `
-    -RecycleAfterEachUse $true `
-    -MaxCapacity 5
-
-$ElasticPool = New-ADOPSElasticPool @ElasticPoolParams -ElasticPoolObject $ElasticPoolObject
 #endregion
 
 #region Create and import the AzDM repository
@@ -142,8 +132,8 @@ if ($null -eq $Repo) {
 }
 
 # Import the AzDM repo
-$null = Import-ADOPSRepository -Project $AzDMProject.Name -RepositoryName $Repo.name -GitSource 'https://github.com/AZDOPS/AzDM.git' -Wait
-$null = Set-ADOPSRepository -Project $AzDMProject.Name -RepositoryId $Repo.id -DefaultBranch 'main' 
+$repoImport = Import-ADOPSRepository -Project $AzDMProject.Name -RepositoryName $Repo.name -GitSource 'https://github.com/AZDOPS/AzDMTemplate.git' -Wait
+$setMain = Set-ADOPSRepository -Project $AzDMProject.Name -RepositoryId $Repo.id -DefaultBranch 'main' 
 
 #endregion
 
@@ -158,7 +148,7 @@ $null = New-ADOPSVariableGroup -Project $AzDMProject.Name -VariableGroupName 'Az
 
 #region create new pipelines from existing YAML manifests.
 $PushPipeline = New-ADOPSPipeline -Name 'AzDM - Push' -YamlPath '.pipelines/Push.yaml' -Repository $Repo.name -Project $AzDMProject.Name
-$ValidatePipeline = New-ADOPSPipeline -Name 'AzDms - Validate' -YamlPath '.pipelines/Validate.yaml' -Repository $Repo.name -Project $AzDMProject.Name
+$ValidatePipeline = New-ADOPSPipeline -Name 'AzDm - Validate' -YamlPath '.pipelines/Validate.yaml' -Repository $Repo.name -Project $AzDMProject.Name
 #endregion
 
 #region add build validation policy to validate pull requests
@@ -175,11 +165,38 @@ $null = New-ADOPSBuildPolicy @BuildPolicyParam -Project $AzDMProject.Name
 $null = New-ADOPSMergePolicy -RepositoryId $Repo.id -Branch 'main' -allowSquash -Project $AzDMProject.Name
 
 # Add pipeline permissions for all three pipelines to the credentials Variable Groups
-$Uri = "https://dev.azure.com/$Organization/$ProjectName/_apis/distributedtask/variablegroups?api-version=7.1-preview.2"
+$Uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/variablegroups?api-version=7.1-preview.2"
 $VariableGroups = (Invoke-ADOPSRestMethod -Uri $Uri -Method 'Get').value | Where-Object -Property 'name' -eq 'AzDM'
 foreach ($pipeline in 'AzDM - Push', 'AzDM - Validate') {
-    $PipelineId = Get-ADOPSPipeline -Name $pipeline  -Project $AzDMProject.Name | Select-Object -ExpandProperty Id
+    $PipelineId = Get-ADOPSPipeline -Name $pipeline -Project $AzDMProject.Name | Select-Object -ExpandProperty Id
     foreach ($groupId in $VariableGroups.id) {
         $null = Grant-ADOPSPipelinePermission -PipelineId $PipelineId -ResourceType 'VariableGroup' -ResourceId $groupId  -Project $AzDMProject.Name
     }
 }
+
+#region Grant pipelines access to VMSS pool and service connection
+$b = @"
+{
+    "pipelines": [
+        {
+            "id": $($ValidatePipeline.id),
+            "authorized": true
+        },
+        {
+            "authorized": true,
+            "id": $($PushPipeline.id)
+        }
+    ]
+}
+"@
+
+### VMSS
+$queueId = (Invoke-ADOPSRestMethod "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?queueNames=$($ElasticPoolName)&api-version=7.2-preview.1").value.id
+$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/queue/${queueId}?api-version=7.2-preview.1"
+Invoke-ADOPSRestMethod -Method Patch -Uri $uri -Body $b
+### Service connection
+$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/endpoint/$($serviceConnection.id)?api-version=7.2-preview.1"
+Invoke-ADOPSRestMethod -Method Patch -Uri $uri -Body $b
+
+#endregion
+
