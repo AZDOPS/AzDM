@@ -165,8 +165,8 @@ $null = New-ADOPSBuildPolicy @BuildPolicyParam -Project $AzDMProject.Name
 $null = New-ADOPSMergePolicy -RepositoryId $Repo.id -Branch 'main' -allowSquash -Project $AzDMProject.Name
 
 # Add pipeline permissions for all three pipelines to the credentials Variable Groups
-$Uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/variablegroups?api-version=7.1-preview.2"
-$VariableGroups = (Invoke-ADOPSRestMethod -Uri $Uri -Method 'Get').value | Where-Object -Property 'name' -eq 'AzDM'
+$VariableGroupUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/variablegroups?api-version=7.1-preview.2"
+$VariableGroups = (Invoke-ADOPSRestMethod -Uri $VariableGroupUri -Method 'Get').value | Where-Object -Property 'name' -eq 'AzDM'
 foreach ($pipeline in 'AzDM - Push', 'AzDM - Validate') {
     $PipelineId = Get-ADOPSPipeline -Name $pipeline -Project $AzDMProject.Name | Select-Object -ExpandProperty Id
     foreach ($groupId in $VariableGroups.id) {
@@ -192,11 +192,11 @@ $b = @"
 
 ### VMSS
 $queueId = (Invoke-ADOPSRestMethod "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?queueNames=$($ElasticPoolName)&api-version=7.2-preview.1").value.id
-$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/queue/${queueId}?api-version=7.2-preview.1"
-Invoke-ADOPSRestMethod -Method Patch -Uri $uri -Body $b
+$queueUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/queue/${queueId}?api-version=7.2-preview.1"
+Invoke-ADOPSRestMethod -Method Patch -Uri $queueUri -Body $b
 ### Service connection
-$uri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/endpoint/$($serviceConnection.id)?api-version=7.2-preview.1"
-Invoke-ADOPSRestMethod -Method Patch -Uri $uri -Body $b
+$enpointUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/endpoint/$($serviceConnection.id)?api-version=7.2-preview.1"
+Invoke-ADOPSRestMethod -Method Patch -Uri $enpointUri -Body $b
 
 #endregion
 
