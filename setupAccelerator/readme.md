@@ -34,7 +34,8 @@ All scripts require editing to set variables before being run. If you do not set
 5. **Manual step**
     - Update `Push.yaml`, value `Pool:` with the configured name of your VMSS agent pool
     - Update `Validate.yaml`, value `Pool:` with the configured name of your VMSS agent pool
-    - Verify the value of `rootfolder:` in `settings.json` is correct.
-    - If `rootfolder:` is changed, create or copy `config.json` from `/Root/` to your new root folder
-    - If `rootfolder:` is changed, update the path filter in `Push.yaml`
-    
+    - If `$AzDMRootFolder` in step 4 in _not_ `Root`
+        - In your repository, create the new folder
+        - create or copy `config.json` from `/Root/` to your new root folder
+        - Verify the value of `rootfolder:` in `settings.json` is pointing to your new root folder.
+        - Update the path filter in `Push.yaml`
