@@ -13,7 +13,7 @@ $AzureDevOpsAzDMProject = @{
 }
 $AzureDevOpsAzDMRepo = '<TODO: SET THIS FIELD>'
 $AzDMRootFolder = '<TODO: SET THIS FIELD>' # This folder _must_ also be set in settings.json!
-$ElasticPoolName = 'AzDMVMSS'
+$ElasticPoolName = '<TODO: SET THIS FIELD>' # This should be set to the name of your CMSS agent pool from step 3.
 
 # Connect to your Azure DevOps and Azure resources
 Connect-AzAccount -Subscription $AzureSubsciptionId -Tenant $EntraTenantID
