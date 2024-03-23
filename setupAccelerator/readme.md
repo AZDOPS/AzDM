@@ -36,3 +36,5 @@ All scripts require editing to set variables before being run. If you do not set
     - Update `Validate.yaml`, value `Pool:` with the configured name of your VMSS agent pool
     - Verify the value of `rootfolder:` in `settings.json` is correct.
     - If `rootfolder:` is changed, create or copy `config.json` from `/Root/` to your new root folder
+    - If `rootfolder:` is changed, update the path filter in `Push.yaml`
+    
