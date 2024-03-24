@@ -43,13 +43,13 @@ Azure DevOps Manager.
 - [x] Adding members (AD Accounts) to built in project groups
     - [x] Merge access with existing (add only) 
 - [x] Automated verify / WhatIf pipeline
-- [ ] Dependencies
+- [x] Dependencies
     - [x] VMSS Bicep setup w. managed identity
     - [x] Service connection
     - [x] Library - task settings for pipeline
         - [x] 'AzDM' - 'AzDMOrganizationName'
         - [x] 'AzDM' - 'AzDMTenantId'
-    - [ ] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
+    - [x] PowerShell functions to create json templates - Make sure the format of all level json is correct including casing.
 - [x] QuickStart templates (import all required setup)
 - [x] Documentation!!
     - [x] a _real_ readme.md...
