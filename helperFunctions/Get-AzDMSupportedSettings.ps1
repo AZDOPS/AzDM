@@ -18,7 +18,7 @@
 #>
 
 Param(
-    [ValidateSet('Project','Pipeline','Repo')]
+    [ValidateSet('Project','Pipeline','Repo','Artifacts')]
     $SettingLevel
 )
 
@@ -26,6 +26,7 @@ switch ($SettingLevel) {
     'Project' { $rawData = Invoke-RestMethod 'https://raw.githubusercontent.com/AZDOPS/AzDM/main/documentation/project.md' }
     'Pipeline' { $rawData = Invoke-RestMethod 'https://raw.githubusercontent.com/AZDOPS/AzDM/main/documentation/pipelines.md' }
     'Repo' { $rawData = Invoke-RestMethod 'https://raw.githubusercontent.com/AZDOPS/AzDM/main/documentation/repos.md' }
+    'Repo' { $rawData = Invoke-RestMethod 'https://raw.githubusercontent.com/AZDOPS/AzDM/main/documentation/artifacts.md' }
 }
 
 # Split on the header "## Supported <whatever> settings", and everything up to the next header. Split on newlines to make sure it is a string array

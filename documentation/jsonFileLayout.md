@@ -46,7 +46,8 @@ Every property covered in any json config _should_ be in camelCase!
         "security": { },
         "project": { },
         "repos": { },
-        "pipelines": { }
+        "pipelines": { },
+        "artifacts": { }
     }
 }
 
@@ -61,7 +62,8 @@ Every property covered in any json config _should_ be in camelCase!
 {
     "core": {
       "reposFolder": "<subfolder where repos are located>", // Required!! For repos functionality
-      "pipelinesFolder": "<subfolder where repos are located>" // Required!! For pipelines functionality
+      "pipelinesFolder": "<subfolder where pipelines are located>", // Required!! For pipelines functionality
+      "artifactsFolder": "<subfolder where repos are located>" // Required!! For artifacts functionality
     },
     "defaults": {
         "description": "<Project description>", // not required 
@@ -71,7 +73,8 @@ Every property covered in any json config _should_ be in camelCase!
         // Any settings here will be applied to this project unless overwritten in configurations further down in the hierarchy. Supported settings are documented in each separate chapter.
         "security": { },
         "repos": { },
-        "pipelines": { }
+        "pipelines": { },
+        "artifacts": { }
     }
 }
 ```
@@ -102,9 +105,22 @@ Every property covered in any json config _should_ be in camelCase!
 
 ```
 
+## projectName.artifacts.json
+
+- Structure location: root/projectName/artifacts/
+- Name: projectName.artifacts.json
+
+```json
+{
+    "artifacts.names": [ "feed1","feed2" ], // Required! Any string here will create a feed with this name
+    "defaults": { } // Overrides global default settings for artifacts for _all_ feeds in this project.
+}
+
+```
+
 ## repoName.json
 
-- Structure location: root/projectName/pipelines/repoName/
+- Structure location: root/projectName/repos/repoName/
 - Name: repoName.json
 
 ```json
@@ -118,4 +134,13 @@ Every property covered in any json config _should_ be in camelCase!
 
 ```json
 { } // This list may contain all settings supported by pipelines
+```
+
+## artifactsName.json
+
+- Structure location: root/projectName/artifacts/artifactsName/
+- Name: artifactsName.json
+
+```json
+{ } // This list may contain all settings supported by repos
 ```

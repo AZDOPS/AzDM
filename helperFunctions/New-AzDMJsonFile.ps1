@@ -18,7 +18,7 @@
 param(
     $Location,
     
-    [ValidateSet('settings.json','config.json','projectName.json','projectName.repos.json','repoName.json','projectName.pipelines.json','pipelineName.json')]
+    [ValidateSet('settings.json','config.json','projectName.json','projectName.repos.json','repoName.json','projectName.pipelines.json','pipelineName.json','projectName.artifacts.json')]
     $JsonType
 )
 
