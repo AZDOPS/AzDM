@@ -32,7 +32,7 @@ Azure DevOps Manager.
 - [x] Deploying pipelines
 - [x] Deploying repos
 - [ ] Deploying artifact feeds
-    - [ ] ADOPS - Get and Set -ADOPSArtifactFeed
+    - [x] ADOPS - Get and Set -ADOPSArtifactFeed
 - [x] Updating projects
     - [x] Requirement: git diff in pipeline to verify what is changed
     - [x] ADOPS - Set-ADOPSProject - https://learn.microsoft.com/en-us/rest/api/azure/devops/core/projects/update?view=azure-devops-rest-7.2
