@@ -39,3 +39,5 @@ All scripts require editing to set variables before being run. If you do not set
         - create or copy `config.json` from `/Root/` to your new root folder
         - Verify the value of `rootfolder:` in `settings.json` is pointing to your new root folder.
         - Update the path filter in `Push.yaml`
+        - Update the path filter in Build validation for your repo
+            - Project settings -> Repositories -> Repo name -> Policies -> Branch policies -> Main branch -> Build validation -> Path filter
