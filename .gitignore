@@ -1,2 +1,4 @@
 /productionTools/
 *.code-workspace
+
+*.local.*
