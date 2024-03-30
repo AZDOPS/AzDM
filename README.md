@@ -14,9 +14,9 @@ The core functionality comes from the [AzDM module](./documentation/module.md) w
 
 ## Getting started
 
-For tutorials, please see [the setup documentation](./documentation/Setup/requirements.md), the [functionality documentation](./documentation/readme.md), or check out [the setup accelerator scripts](./setupAccelerator/readme.md)
+For tutorials, please see [the setup documentation](./documentation/Setup/requirements.md), the [functionality documentation](./documentation/readme.md), or check out [the setup accelerator scripts](./setupAccelerator/readme.md).
 
-Documentation and examples are currently being worked on and will be updated as soon as possible.
+Documentation and examples are currently being worked on and functionality will be updated and / or added in time. You can find some helper functions already in the [helperFunction folder](./helperFunctions/readme.md)
 
 ## Folder structure
 
