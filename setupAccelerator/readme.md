@@ -7,6 +7,7 @@ This folder contains tools and scripts that can help you get up and running in n
 > Note: Some tasks are still manual. They may be automated at some time, but for now, sorry.
 
 All scripts require editing to set variables before being run. If you do not set these before running it _will not work_.
+The local .gitignore file is configured to ignore `*.local.*`, which means if you save you r config files as `2.AzureResources.local.ps1` it will not be included in git, and you can safely keep your config without risk pushing it to a repo.
 
 ## Running order 
 
