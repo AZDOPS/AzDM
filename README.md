@@ -4,6 +4,12 @@ This is the home of the Azure DevOps manager, or the Dungeon Master if you will.
 
 For code, modules, and templates, pleas visit the [AzDM template repo](https://github.com/AZDOPS/AzDMTemplate)
 
+## Downloads and versions
+
+To get the latest _published_ release, go get [the documentation](https://github.com/AZDOPS/AzDM/releases) and  [the related template](https://github.com/AZDOPS/AzDMTemplate/releases). Version numbers here is released synchronously and contain the correct docs for this specific release.
+
+If you feel brave you can run anything from the repos directly, and main _should_ work, but updates here may be done at any time and the feature set may change from day to day. You can find which version you are running by looking in the module [PSM1 file](https://github.com/AZDOPS/AzDMTemplate/blob/main/.module/AzDM.psm1), first line. vNext implies _this was created after the version stated, but before the next version number release_. Consider vNext to be a "nightly" style build.
+
 ## What is AzDM?
 
 AzDM is an [opinionated](https://stackoverflow.com/questions/802050/what-is-opinionated-software) project to manage Azure DevOps as code. It is _highly_ inspired by the [AzOps](https://github.com/Azure/AzOps) project, and stems from the idea that **_everything in Azure DevOps is a resource, and can be viewed and managed as a folder or file configuration_**
