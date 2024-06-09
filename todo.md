@@ -3,6 +3,7 @@ Azure DevOps Manager.
 
 ## Stage 2 requirements
 
+- [ ] Move all of this todo stuff to GitHub and use a board of some kind instead..
 - [ ] Pull existing data
 - [ ] policy mismatch report
   - [ ] Extend reporting to
@@ -19,7 +20,8 @@ Azure DevOps Manager.
     - [ ] "Create a copy of template x and add to project"
 - [ ] Queries for boards using templates
     - [ ] Have library of queries and map them in to projects
-    - [ ] Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
+- [ ] Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
+    - [X] Create ADOPS function
 - [ ] Clarify release procedure
     - [ ] Synchronize AzDM and AzDMTemplate release
     - [ ] Set up release pipeline
