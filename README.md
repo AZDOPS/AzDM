@@ -1,5 +1,7 @@
 # AzDM - Azure DevOps Manager
 
+![AzDM logo goes here. If you dont see it, someone messed up...](./LogoD20.png)
+
 This is the home of the Azure DevOps manager, or the Dungeon Master if you will.
 
 For code, modules, and templates, pleas visit the [AzDM template repo](https://github.com/AZDOPS/AzDMTemplate)
