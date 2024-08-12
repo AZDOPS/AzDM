@@ -20,7 +20,7 @@ Azure DevOps Manager.
     - [ ] "Create a copy of template x and add to project"
 - [ ] Queries for boards using templates
     - [ ] Have library of queries and map them in to projects
-- [ ] Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
+- [x] Base createYamlFromTemplateFile in pipelines.ps1 on ADOPS function
     - [X] Create ADOPS function
 - [ ] Clarify release procedure
     - [ ] Synchronize AzDM and AzDMTemplate release
