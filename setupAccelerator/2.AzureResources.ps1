@@ -2,10 +2,9 @@
 ## Azure Variables
 $EntraTenantID = '<TODO: SET THIS FIELD>'
 $AzureSubsciptionId = '<TODO: SET THIS FIELD>'
-$AzureVMSSResourceGroupName = '<TODO: SET THIS FIELD>'
+$AzureResourceGroupName = '<TODO: SET THIS FIELD>'
 $ResourceLocation = '<TODO: SET THIS FIELD>'
-$VMSSAdminUserName = '<TODO: SET THIS FIELD>'
-$VMSSAdminPassword = New-YapgPassword -AddChars -Capitalize -Leet
+$ManagedDevOpsPoolName = '<TODO: SET THIS FIELD>'
 
 ## Azure DevOps Variables
 $AzureDevOpsOrganizationName = '<TODO: SET THIS FIELD>'
@@ -21,26 +20,35 @@ Connect-AzAccount -Subscription $AzureSubsciptionId -Tenant $EntraTenantID
 Connect-ADOPS -Organization $AzureDevOpsOrganizationName -TenantId $EntraTenantID
 
 #region Set up Azure Infrastructure
-# Deploy VMSS and network
+# This will deploy Managed DevOps pool and related resources - DevCenter with project, VNet, Subnet dedicated to MDP, and User assigned managed identity.
 try {
-    $RG = Get-AzResourceGroup -Name $AzureVMSSResourceGroupName -ErrorAction Stop
+    $RG = Get-AzResourceGroup -Name $AzureResourceGroupName -ErrorAction Stop
 } catch {
-    $RG = New-AzResourceGroup -Name $AzureVMSSResourceGroupName -Location $ResourceLocation
+    $RG = New-AzResourceGroup -Name $AzureResourceGroupName -Location $ResourceLocation
 }
 
-$Network = New-AzResourceGroupDeployment -Name 'VMSSNetworkDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\network.bicep
-$VMSS = New-AzResourceGroupDeployment -Name 'VMSSDeploy' -ResourceGroupName $AzureVMSSResourceGroupName -TemplateFile .\bicepTemplates\VMSS.bicep -TemplateParameterObject @{
-    adminUserName = $VMSSAdminUserName
-    subnetId = $Network.Outputs['subnetId'].Value
-    adminPassword = $VMSSAdminPassword
+$MDPDeploy = New-AzResourceGroupDeployment -Name 'ManagedDevOpsPool' -ResourceGroupName $RG -TemplateFile $PSScriptRoot\bicepTemplates\main.bicep -TemplateParameterObject @{
+    DevCenterName = "${ManagedDevOpsPoolName}DC"
+    ManagedIdentityName = "${ManagedDevOpsPoolName}MI"
+    subnetNameName = "${ManagedDevOpsPoolName}SN"
+    vnetNameName = "${ManagedDevOpsPoolName}VN"
+    MDPName = "${ManagedDevOpsPoolName}MDP"
+    ADOUrl = "https://dev.azure.com/$AzureDevOpsOrganizationName"
+    MDPImageName = @(
+        @{
+            wellKnownImageName = 'ubuntu-22.04/latest'
+        }
+    )
+    DevOpsInfrastructurePrincipalId = (Get-AzADServicePrincipal -DisplayName DevOpsInfrastructure).Id
 }
+
 #endregion
 
 #region Add managed identity to Azure DevOps
 # Add the managed identity to your Azure DevOps organization
-$VMSSIdentity = $vmss.Outputs['identity'].Value
+$MDPIdentity = $MDPDeploy.Outputs['identity'].Value
 $uri = "https://vssps.dev.azure.com/$AzureDevOpsOrganizationName/_apis/graph/serviceprincipals?api-version=7.1-preview.1"
-$body = "{""originId"": ""$($VMSSIdentity)""}"
+$body = "{""originId"": ""$($MDPIdentity)""}"
 $User = Invoke-ADOPSRestMethod -Uri $uri -Method Post -Body $body
 
 ## Add a license to the managed identity

@@ -13,7 +13,7 @@ $AzureDevOpsAzDMProject = @{
 }
 $AzureDevOpsAzDMRepo = '<TODO: SET THIS FIELD>'
 $AzDMRootFolder = '<TODO: SET THIS FIELD>' # This folder _must_ also be set in settings.json!
-$ElasticPoolName = '<TODO: SET THIS FIELD>' # This should be set to the name of your VMSS agent pool from step 3.
+$ManagedDevOpsPoolName = '<TODO: SET THIS FIELD>' # This should be set to the name of your Managed DevOps pool from step 2.
 
 # Connect to your Azure DevOps and Azure resources
 Connect-AzAccount -Subscription $AzureSubsciptionId -Tenant $EntraTenantID
@@ -70,7 +70,7 @@ foreach ($pipeline in 'AzDM - Push', 'AzDM - Validate') {
     }
 }
 
-#region Grant pipelines access to VMSS pool and service connection
+#region Grant pipelines access to Managed DevOps pool
 $b = @"
 {
     "pipelines": [
@@ -86,14 +86,10 @@ $b = @"
 }
 "@
 
-### VMSS
-$queueId = (Invoke-ADOPSRestMethod "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?queueNames=$($ElasticPoolName)&api-version=7.2-preview.1").value.id
+### Managed DevOps Pool
+$queueId = (Invoke-ADOPSRestMethod "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?queueNames=$($ManagedDevOpsPoolName)&api-version=7.2-preview.1").value.id
 $queueUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/queue/${queueId}?api-version=7.2-preview.1"
 Invoke-ADOPSRestMethod -Method Patch -Uri $queueUri -Body $b
-### Service connection
-$serviceConnectionid = (Invoke-ADOPSRestMethod -Uri "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/serviceendpoint/endpoints?api-version=7.2-preview.4" -Method Get).value.id
-$endpointUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/endpoint/$($serviceConnectionid)?api-version=7.2-preview.1"
-Invoke-ADOPSRestMethod -Method Patch -Uri $endpointUri -Body $b
 
 #endregion
 
