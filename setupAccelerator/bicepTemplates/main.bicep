@@ -6,6 +6,7 @@ param MDPName string
 param ADOUrl string
 param MDPImageName osImages[]
 param DevOpsInfrastructurePrincipalId string
+param maximumConcurrency int
 
 type osImages = {
   aliases: string[]?
@@ -37,7 +38,7 @@ module Network 'modules/Network.bicep' = {
 }
 
 module MDP 'modules/MDP.bicep' = {
-  name: 'ManagedDevOpsPool'
+  name: 'MDP'
   params: {
     name: MDPName
     AzureDevOpsOrganizations: {
@@ -46,7 +47,7 @@ module MDP 'modules/MDP.bicep' = {
     }
     DevCenterProjectResourceId: DevCenter.outputs.DevCenterProjectId
     managedIdentityId: ManagedIdentity.outputs.managedIdentityId
-    
+    maximumConcurrency: maximumConcurrency
     images: MDPImageName
     subnetId: Network.outputs.SubnetId
   }

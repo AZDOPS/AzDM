@@ -27,12 +27,13 @@ try {
     $RG = New-AzResourceGroup -Name $AzureResourceGroupName -Location $ResourceLocation
 }
 
-$MDPDeploy = New-AzResourceGroupDeployment -Name 'ManagedDevOpsPool' -ResourceGroupName $RG -TemplateFile $PSScriptRoot\bicepTemplates\main.bicep -TemplateParameterObject @{
+$MDPDeploy = New-AzResourceGroupDeployment -Name 'ManagedDevOpsPool' -ResourceGroupName $RG.ResourceGroupName -TemplateFile .\bicepTemplates\main.bicep -TemplateParameterObject @{
     DevCenterName = "${ManagedDevOpsPoolName}DC"
     ManagedIdentityName = "${ManagedDevOpsPoolName}MI"
     subnetNameName = "${ManagedDevOpsPoolName}SN"
     vnetNameName = "${ManagedDevOpsPoolName}VN"
-    MDPName = "${ManagedDevOpsPoolName}MDP"
+    MDPName = "${ManagedDevOpsPoolName}"
+    maximumConcurrency = 1
     ADOUrl = "https://dev.azure.com/$AzureDevOpsOrganizationName"
     MDPImageName = @(
         @{
@@ -48,7 +49,8 @@ $MDPDeploy = New-AzResourceGroupDeployment -Name 'ManagedDevOpsPool' -ResourceGr
 # Add the managed identity to your Azure DevOps organization
 $MDPIdentity = $MDPDeploy.Outputs['identity'].Value
 $uri = "https://vssps.dev.azure.com/$AzureDevOpsOrganizationName/_apis/graph/serviceprincipals?api-version=7.1-preview.1"
-$body = "{""originId"": ""$($MDPIdentity)""}"
+$ClientId = (Get-AzUserAssignedIdentity -Name $MDPIdentity -ResourceGroupName $RG.ResourceGroupName).PrincipalId
+$body = "{""originId"": ""$($ClientId)""}"
 $User = Invoke-ADOPSRestMethod -Uri $uri -Method Post -Body $body
 
 ## Add a license to the managed identity

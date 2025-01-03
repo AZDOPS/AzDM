@@ -77,7 +77,7 @@ var lessKnownImages = [for item in standardImages: {
 var imagesList = union(wellKnownImages, lessKnownImages)
 
 // Resources
-resource MDP 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
+resource MDP 'Microsoft.DevOpsInfrastructure/pools@2024-10-19' = {
   name: name
   location: location
   identity: {

@@ -33,7 +33,7 @@ The local .gitignore file is configured to ignore `*.local.*`, which means if yo
 4. **Manual step**
     - Update `Push.yaml`, value `Pool:` with the configured name of your Managed DevOps pool
     - Update `Validate.yaml`, value `Pool:` with the configured name of your Managed DevOps pool
-    - If `$AzDMRootFolder` in step 4 in _not_ `Root`
+    - If `$AzDMRootFolder` in 3, `3.AzDOResources.ps1`, is _not_ `Root`
         - In your repository, create the new folder
         - create or copy `config.json` from `/Root/` to your new root folder
         - Verify the value of `rootfolder:` in `settings.json` is pointing to your new root folder.

@@ -12,7 +12,7 @@ $AzureDevOpsAzDMProject = @{
     Visibility = 'Private'
 }
 $AzureDevOpsAzDMRepo = '<TODO: SET THIS FIELD>'
-$AzDMRootFolder = '<TODO: SET THIS FIELD>' # This folder _must_ also be set in settings.json!
+$AzDMRootFolder = '<TODO: SET THIS FIELD>' # This folder _must_ also be set in settings.json! Set to 'Root' for easiest deployment.
 $ManagedDevOpsPoolName = '<TODO: SET THIS FIELD>' # This should be set to the name of your Managed DevOps pool from step 2.
 
 # Connect to your Azure DevOps and Azure resources
@@ -87,7 +87,20 @@ $b = @"
 "@
 
 ### Managed DevOps Pool
+### Depending on the order of creation of objects the pool may or may not be listed in this project. If it isn't added, add it now
 $queueId = (Invoke-ADOPSRestMethod "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?queueNames=$($ManagedDevOpsPoolName)&api-version=7.2-preview.1").value.id
+if ($null -eq $queueId) {
+    $qid = (Get-ADOPSPool -PoolName "${ManagedDevOpsPoolName}").id
+    $queueBody = @{
+        name = $ManagedDevOpsPoolName
+        pool = @{
+            id = $qid
+        }
+    } | ConvertTo-Json -Compress
+    $queueUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/distributedtask/queues?authorizePipelines=false&api-version=7.2-preview.1"
+    $queueId = (Invoke-ADOPSRestMethod -Uri $queueUri -Method Post -Body $queueBody).id
+}
+
 $queueUri = "https://dev.azure.com/$AzureDevOpsOrganizationName/$($AzDMProject.name)/_apis/pipelines/pipelinePermissions/queue/${queueId}?api-version=7.2-preview.1"
 Invoke-ADOPSRestMethod -Method Patch -Uri $queueUri -Body $b
 
